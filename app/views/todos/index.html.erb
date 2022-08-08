@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  </head>
+  <body>
+    <main class="TodoPage-main">
+      <article>
+        <h1 class ="TodoPage-Title">My Todo-List</h1>
+        <section class="Todo-add">
+          <input type ="text" placeholder="What's next?"/>
+          <input type="date" />
+          <button>Add</button>
+        </section>
+        <%= render partial: "todo_section", locals: { section_title: "Over Due", todos: Todo.overdue } %>
+        <%= render partial: "todo_section", locals: { section_title: "Due Today", todos: Todo.due_today } %>
+        <%= render partial: "todo_section", locals: { section_title: "Due Later", todos: Todo.due_later } %>
+
+      </article>
+    </main>
+
+  </body>
+</html>

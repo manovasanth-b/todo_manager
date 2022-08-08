@@ -1,0 +1,14 @@
+<section class="Todo-section">
+  <h3 class="Todo-subtitle"><%= section_title %> <%= todos.completed.count %> / <%= todos.count %></h3>
+  <% todos.each do |todo| %>
+    <% checked = todo.completed ? "checked" : "" %>
+    <div class="Todo-Task">
+      <input type="checkbox" <%= checked %>/>
+      <p class ="todo-text"><%= todo.todo_text %>  <%= todo.due_date.to_formatted_s(:short) %></p>
+      <i class="fa fa-trash"></i>
+    </div>
+  <% end %>
+  <% if todos.count == 0 %>
+  <p class ="todo-text">Hey!! you missed few tasks.</p>
+  <% end %>
+</section>

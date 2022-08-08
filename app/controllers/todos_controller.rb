@@ -1,11 +1,15 @@
 class TodosController < ApplicationController
+  protect_from_forgery with: :null_session
+
   def index
-    render plain: "Todos Here!! we can see -> \n#{Todo.order(:due_date).map { |todo| todo.format_todo }.join("\n")}"
+    # render plain: "Todos Here!! we can see -> \n#{Todo.order(:due_date).map { |todo| todo.format_todo }.join("\n")}"
+    render "index"
   end
 
   def get_todo_by_id
     id = params[:id]
-    render plain: "#{Todo.find(id).format_todo}"
+    # render plain: "#{Todo.find(id).format_todo}"
+    render "index"
   end
 
   def add_todo

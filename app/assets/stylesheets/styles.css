@@ -1,6 +1,7 @@
 body{
   max-width: 500px;
   margin: 0 auto;
+
 }
 .TodoPage-main{
   margin: 20px auto;
@@ -17,14 +18,14 @@ body{
 .Todo-add > input:first-child{
   padding: 3px 10px;
   width: 190px;
-  height: 32px;
+  height: 23px;
   border-color: #BFB8CC ;
   border-radius: 4px;
 }
 .Todo-add > input:nth-child(2){
   padding: 3px;
   width: 93px;
-  height: 32px;
+  height: 23px;
   border-color: #BFB8CC ;
   border-radius: 4px;
 }
@@ -33,6 +34,7 @@ body{
   height: 32px;
   width: 72px;
   border: 0px;
+  margin: 0;
   background-color: #48BB78;
   color : white;
   border-radius: 4px;
@@ -45,7 +47,6 @@ body{
 .Todo-Task{
   display: flex;
   align-items: center;
-  max-width: 60% ;
   padding: 2px;
   height: 26px;
   gap: 10px;
@@ -53,14 +54,14 @@ body{
 }
 .Todo-Task > i{
   cursor: pointer;
-  margin-left: auto;
-  margin-right: 10px;
   visibility: hidden;
 }
 .Todo-Task:hover {
   background-color : #F1EDF7;
+  transition: all .2s;
 }
-.Todo-Task:hover i{visibility: visible;}
+.Todo-Task:hover i{visibility: visible; transition: all .2s;}
 .todo-text{
   font-size: 14px ;
+
 }
