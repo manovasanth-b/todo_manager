@@ -1,11 +1,14 @@
 <section class="Todo-section">
   <h3 class="Todo-subtitle"><%= section_title %> <%= todos.completed.count %> / <%= todos.count %></h3>
   <% todos.each do |todo| %>
-    <% checked = todo.completed ? "checked" : "" %>
     <div class="Todo-Task">
-      <input type="checkbox" <%= checked %>/>
-      <p class ="todo-text"><%= todo.todo_text %>  <%= todo.due_date.to_formatted_s(:short) %></p>
-      <i class="fa fa-trash"></i>
+      <%= form_with(url: "/todo/update/#{todo.id}", method: "PUT") do %>
+        <input type="checkbox" onclick ="this.form.submit()" name="completed" <%= todo.completed ? "checked" : "" %> />
+      <% end %>
+      <p class =<%= todo.completed ? "todo-text-strike" : "todo-text" %>><%= todo.todo_text %>  <%= todo.due_date.to_formatted_s(:short) %></p>
+      <%= form_with(url: "/todo/delete/#{todo.id}", method: "DELETE") do %>
+        <input type="image" src=<%= asset_path("trash-can.png") %> width="12" height="12">
+      <% end %>
     </div>
   <% end %>
   <% if todos.count == 0 %>

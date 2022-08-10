@@ -4,17 +4,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
+    <section class ="Header">
+      <a class="Header-title"href="/" >The Todo Manager</a>
+      <%= link_to "sign-out", signout_path, class: "Header-signout", data: { confirm: "Really?", turbo_method: :delete } %>
+    </section>
     <main class="TodoPage-main">
       <article>
-        <h1 class ="TodoPage-Title">My Todo-List</h1>
-        <section class="Todo-add">
-          <input type ="text" placeholder="What's next?"/>
-          <input type="date" />
-          <button>Add</button>
-        </section>
-        <%= render partial: "todo_section", locals: { section_title: "Over Due", todos: Todo.overdue } %>
-        <%= render partial: "todo_section", locals: { section_title: "Due Today", todos: Todo.due_today } %>
-        <%= render partial: "todo_section", locals: { section_title: "Due Later", todos: Todo.due_later } %>
+        <h1 class ="TodoPage-Title">Welcome <%= @current_user.user_name %>!</h1>
+        <% flash.each do |type, msg| %>
+          <% contains = msg.include? "Error" %>
+          <% className = contains ? "error_message" : "success_message" %>
+          <p class=<%= className %>><%= msg %></p>
+        <% end %>
+        <%= form_with(url: "todo/new", method: "POST", class: "Todo-add") do %>
+          <%= text_field_tag("todo_text", value = nil, options = { class: "todo_text", placeholder: "What's next?", required: true }) %>
+          <%= date_field_tag("due_date", value = nil, options = { class: "due_date", required: true }) %>
+          <button type="submit" >Add</button>
+        <% end %>
+        <%= render partial: "todo_section", locals: { section_title: "Over Due", todos: @todos.overdue } %>
+        <%= render partial: "todo_section", locals: { section_title: "Due Today", todos: @todos.due_today } %>
+        <%= render partial: "todo_section", locals: { section_title: "Due Later", todos: @todos.due_later } %>
 
       </article>
     </main>

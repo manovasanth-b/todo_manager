@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <section class ="Header">
+      <a class="Header-title"href="/" >The Todo Manager</a>
+    </section>
+    <main class="HomePage_main">
+      <article>
+        <form class ="Section" method="POST" action =<%= signin_path %>>
+          <h2 class="Section_Title">Sign in</h2>
+          <% flash.each do |type, msg| %>
+            <% contains = msg.include? "Error" %>
+            <% className = contains ? "error_message" : "success_message" %>
+            <p class=<%= className %>><%= msg %></p>
+          <% end %>
+          <div class ="input_box">
+            <%= label_tag(:email_address, "Email Address", options = { class: "input_box-label" }) %>
+            <%= text_field_tag("email_address", value = nil, options = { class: "input_text", required: true }) %>
+          </div>
+          <div class ="input_box">
+            <%= label_tag(:password, "Password", options = { class: "input_box-label" }) %>
+            <%= password_field_tag("password", value = nil, options = { class: "input_text", required: true }) %>
+          </div>
+          <button type="submit" >Sign in</button>
+        </form>
+      </article>
+    </main>
+
+  </body>
+</html>

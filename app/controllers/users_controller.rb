@@ -1,16 +1,37 @@
 class UsersController < ApplicationController
-  protect_from_forgery with: :null_session
-
   def index
     render plain: "Available users -> \n#{User.order(:user_name).map { |user| user.format_user }.join("\n")}"
   end
 
-  def add_user
-    user_params = params.require(:user).permit(:email_address, :user_name, :password)
+  def signup_page
+    render "new"
+  end
 
-    created_user = User.create!(user_params)
-    rendered_text = created_user.id != nil ? "#{created_user[:user_name]} successfully created!!" : "Error: on creating user"
-    render plain: rendered_text
+  def login_page
+    render "login"
+  end
+
+  def add_user
+    user_params = params.permit(:email_address, :firstname, :password, :lastname)
+    begin
+      if User.find_by(:email_address => params[:email_address])
+        raise "Error : User with #{params[:email_address]} already exist!!"
+      end
+      @user = User.create!(
+        email_address: user_params[:email_address],
+        password: user_params[:password],
+        lastname: user_params[:lastname],
+        firstname: user_params[:firstname],
+        user_name: "#{user_params[:firstname]} #{user_params[:lastname][0]}",
+      )
+    rescue Exception => e
+      flash[:alert] = e.message
+      redirect_to users_new_path
+    else
+      flash[:notice] = "Your Profile has been created!!"
+
+      redirect_to new_signin_path
+    end
   end
 
   def update_user
@@ -20,13 +41,6 @@ class UsersController < ApplicationController
     user.password = params[:password] != nil ? params[:password] : user.password
     user.save
     rendered_text = user.id != nil ? "#{user[:id]} User has been successfully updated!!" : "Error: on updating user"
-    render plain: "#{rendered_text} "
-  end
-
-  def auth
-    user = User.find_by(:email_address => params[:email_address])
-
-    rendered_text = user != nil && params[:password] != nil && user.password == params[:password] ? "Authorized Successfully" : "Error : 500 /Not Authorized "
     render plain: "#{rendered_text} "
   end
 end

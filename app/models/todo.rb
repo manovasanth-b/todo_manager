@@ -1,4 +1,6 @@
-class Todo < ActiveRecord::Base
+class Todo < ApplicationRecord
+  belongs_to :user
+
   def format_todo
     is_completed = completed ? "[x]" : "[]"
     "#{id}.#{is_completed} #{due_date.to_s} #{todo_text}"
@@ -19,15 +21,15 @@ class Todo < ActiveRecord::Base
   end
 
   def self.overdue
-    all.where("due_date < ?", Date.today)
+    all.order(:todo_text).where("due_date < ?", Date.today)
   end
 
   def self.due_today
-    all.where("due_date = ?", Date.today)
+    all.order(:todo_text).where("due_date = ?", Date.today)
   end
 
   def self.due_later
-    all.where("due_date > ?", Date.today)
+    all.order(:todo_text).where("due_date > ?", Date.today)
   end
 
   def self.completed

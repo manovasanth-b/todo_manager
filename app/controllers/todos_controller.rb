@@ -1,9 +1,14 @@
 class TodosController < ApplicationController
-  protect_from_forgery with: :null_session
+  # protect_from_forgery with: :null_session
 
   def index
     # render plain: "Todos Here!! we can see -> \n#{Todo.order(:due_date).map { |todo| todo.format_todo }.join("\n")}"
-    render "index"
+    if current_user
+      @todos = Todo.all.where(:user_id => current_user.id)
+      render "index"
+    else
+      redirect_to root_path
+    end
   end
 
   def get_todo_by_id
@@ -13,19 +18,48 @@ class TodosController < ApplicationController
   end
 
   def add_todo
-    todo_text = params[:todo_text]
-    due_date = params[:due_date]
-    created_todo = Todo.create!(:todo_text => todo_text, :due_date => due_date.to_date, :completed => false)
-    rendered_text = created_todo.id != nil ? "#{created_todo[:todo_text]} Task successfully created!!" : "Error: on creating task"
-    render plain: "#{rendered_text} "
+    if current_user
+      todo_text = params[:todo_text]
+      due_date = params[:due_date]
+      created_todo = Todo.create!(:user_id => current_user.id, :todo_text => todo_text, :due_date => due_date.to_date, :completed => false)
+      begin
+        if created_todo != nil && created_todo.id != nil
+        else raise "Error: on creating task"         end
+      rescue Exception => e
+        flash[:notice] = e.message
+      end
+      redirect_to todos_path
+    else redirect_to root_path     end
+  end
+
+  def delete_by_id
+    if current_user
+      id = params[:id]
+      todo = Todo.find_by(:id => id, :user_id => current_user.id)
+      begin
+        if todo != nil && todo.id != nil
+          todo.destroy
+        else raise "Error: on deleting task"         end
+      rescue Exception => e
+        flash[:notice] = e.message
+      end
+      redirect_to todos_path
+    else redirect_to root_path     end
   end
 
   def mark_as_completed
-    id = params[:id]
-    todo = Todo.find(id)
-    todo.completed = true
-    todo.save
-    rendered_text = todo.id != nil ? "#{todo[:id]} Task has been successfully updated!!" : "Error: on updating task"
-    render plain: "#{rendered_text} "
+    if current_user
+      id = params[:id]
+      todo = Todo.find_by(:id => id, :user_id => current_user.id)
+      begin
+        if todo != nil && todo.id != nil
+          todo.completed = params[:completed]
+          todo.save
+        else raise "Error: on updating task"         end
+      rescue Exception => e
+        flash[:notice] = e.message
+      end
+      redirect_to todos_path
+    else redirect_to root_path     end
   end
 end
