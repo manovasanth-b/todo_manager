@@ -17,13 +17,15 @@ class UsersController < ApplicationController
       if User.find_by(:email_address => params[:email_address])
         raise "Error : User with #{params[:email_address]} already exist!!"
       end
-      @user = User.create!(
+      @user = User.new(
         email_address: user_params[:email_address],
         password: user_params[:password],
         lastname: user_params[:lastname],
         firstname: user_params[:firstname],
         user_name: "#{user_params[:firstname]} #{user_params[:lastname][0]}",
       )
+      if @user.save
+      else raise "#{@user.errors.full_message}"       end
     rescue Exception => e
       flash[:alert] = e.message
       redirect_to users_new_path

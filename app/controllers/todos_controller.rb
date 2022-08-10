@@ -4,7 +4,8 @@ class TodosController < ApplicationController
   def index
     # render plain: "Todos Here!! we can see -> \n#{Todo.order(:due_date).map { |todo| todo.format_todo }.join("\n")}"
     if current_user
-      @todos = Todo.all.where(:user_id => current_user.id)
+      # @todos = Todo.all.where(:user_id => current_user.id)
+      @todos = current_user.todos
       render "index"
     else
       redirect_to root_path
